@@ -3,7 +3,24 @@
 ## 1. Detection
 1. 使用 RetinaFace 檢測人臉框和關鍵點，再經由仿射變換對齊人臉，並 crop 成 `112 * 112`。
 2. 預訓練模型（已轉為 onnx），若需手動轉，須確保 onnx 版本為 `1.5.0`。下載連結 ([微雲](https://share.weiyun.com/S0VC2Uhc))
-3. 參考：[https://github.com/linghu8812/tensorrt_inference/tree/master/RetinaFace](https://github.com/linghu8812/tensorrt_inference/tree/master/RetinaFace)
+3. [配置文檔](./config_retinaface.yaml)， 
+```yaml
+RetinaFace:
+    onnx_file:     "../mnet.25.onnx"
+    engine_file:   "../mnet.25.trt"
+    BATCH_SIZE:    1
+    INPUT_CHANNEL: 3
+    IMAGE_WIDTH:   640
+    IMAGE_HEIGHT:  640
+    obj_threshold: 0.5
+    nms_threshold: 0.45
+    detect_mask:   False
+    mask_thresh:   0.5
+    landmark_std:  1
+    feature_steps: [32, 16, 8]
+    anchor_sizes:  [[512, 256], [128, 64], [32, 16]]
+```
+4. 參考：[https://github.com/linghu8812/tensorrt_inference/tree/master/RetinaFace](https://github.com/linghu8812/tensorrt_inference/tree/master/RetinaFace)
 
 ### 2. Recognition
 1. 使用 ArcFace 模型提取特徵，計算相似度分數。
