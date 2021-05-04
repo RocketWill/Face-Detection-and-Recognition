@@ -29,3 +29,6 @@ arcface:
 - `facebank_dir` 為 facebank 文件夾路徑，應包含以 face 代號命名的子文件夾
 - `update` 為是否更新上述兩個文件內容，若為 `true` 則會從 `facebank_dir` 更新 `facebank` 資訊，並將結果輸出至 `facebank_file` 以及 `names_file`
 4. 參考：[https://github.com/linghu8812/tensorrt_inference/tree/master/arcface](https://github.com/linghu8812/tensorrt_inference/tree/master/arcface)
+
+3. Result
+![result](./results/rec.jpg)
