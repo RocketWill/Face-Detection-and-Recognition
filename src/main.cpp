@@ -47,31 +47,38 @@ int main (int argc, char *argv[]) {
     std::vector<std::string> name_ids = read_name_file(name_file);
 
     std::vector<std::vector<RetinaFace::FaceRes>> all_dets = RetinaFace.InferenceImage(image_path);
+
     cv::Mat img = cv::imread(image_path);
+    cv::Mat vis = img.clone();
     for (size_t i=0; i<all_dets[0].size(); ++i) {
         cv::Mat aligned_face = RetinaFace.align_face(img, all_dets[0][i].keypoints, 112);
         all_dets[0][i].aligned_face = aligned_face;
         cv::Mat face_feature = ArcFace.InferenceImage(aligned_face);
-
         auto score_matrix = face_feature * facebank_features;
         std::cout << score_matrix << std::endl;
-
         double minVal; 
         double maxVal; 
         Point minLoc; 
         Point maxLoc;
+        std::string name = "Unknown";
         cv::minMaxLoc(score_matrix, &minVal, &maxVal, &minLoc, &maxLoc);
-
         if (maxVal < 0.2) {
             std::cout << "Cannot recognize your face." << std::endl;
         } else {
-            std::cout << "Guess you are " << name_ids[maxLoc.x] << "!" << std::endl;
+            name = name_ids[maxLoc.x];
+            std::cout << "Guess you are " << name << "!" << std::endl;
         }
-
-        cv::imwrite(std::to_string(i)+"_align.jpg", aligned_face);
+        
+        // visualize
+        int x = all_dets[0][i].face_box.x - all_dets[0][i].face_box.w / 2;
+        int y = all_dets[0][i].face_box.y - all_dets[0][i].face_box.h / 2;
+        cv::Rect box(x, y, all_dets[0][i].face_box.w, all_dets[0][i].face_box.h);
+        cv::rectangle(vis, box, cv::Scalar(0, 255, 255), 2, cv::LINE_8, 0);
+        cv::putText(vis, name, cv::Point(x, y - 5),
+                            cv::FONT_HERSHEY_COMPLEX, 0.7, cv::Scalar(255, 255, 0), 2);
     }
 
-    
+    cv::imwrite("./rec.jpg", vis);
     return 0;
 
 }
