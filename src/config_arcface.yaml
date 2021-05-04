@@ -1,0 +1,12 @@
+arcface:
+    onnx_file:     "../arcface_r100.onnx"
+    engine_file:   "../arcface_r100.trt"
+    update: true
+    facebank_file: "../facebank.bin"
+    facebank_dir: "/mnt/nfs/chengyong/Workspace/face_recognition/InsightFace_Pytorch_local/data/facebank"
+    NUM_FACES: 10
+    EMB_NUM: 512
+    BATCH_SIZE:    1
+    INPUT_CHANNEL: 3
+    IMAGE_WIDTH:   112
+    IMAGE_HEIGHT:  112
