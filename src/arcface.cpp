@@ -180,7 +180,7 @@ void ArcFace::ReshapeandNormalize(float *out, cv::Mat &feature, const int &MAT_S
     }
 }
 
-void ArcFace::PrepareFacebank(const std::map<std::string, std::vector<cv::String>> &mapping, std::string save_path) {
+void ArcFace::PrepareFacebank(const std::map<std::string, std::vector<cv::String>> &mapping, std::string save_facebank_path, std::string save_name_path) {
     //get context
     assert(engine != nullptr);
     context = engine->createExecutionContext();
@@ -208,7 +208,7 @@ void ArcFace::PrepareFacebank(const std::map<std::string, std::vector<cv::String
 
     int outSize = bufferSize[1] / sizeof(float) / BATCH_SIZE;
 
-    WriteFacebank(mapping, outSize, buffers, bufferSize, stream, save_path);
+    WriteFacebank(mapping, outSize, buffers, bufferSize, stream, save_facebank_path, save_name_path);
 
     // release the stream and the buffers
     cudaStreamDestroy(stream);
@@ -217,16 +217,18 @@ void ArcFace::PrepareFacebank(const std::map<std::string, std::vector<cv::String
 }
 
 void ArcFace::WriteFacebank(const std::map<std::string, std::vector<cv::String>> &mapping, const int &outSize, void **buffers,
-                         const std::vector<int64_t> &bufferSize, cudaStream_t stream, std::string save_path) {
-    int index = 0;
+                         const std::vector<int64_t> &bufferSize, cudaStream_t stream, std::string save_facebank_path, std::string save_name_path) {
     int batch_id = 0;
     std::vector<cv::Mat> vec_Mat(BATCH_SIZE);
     cv::Mat face_features;
     float facebank[mapping.size()*outSize];
     int idx = 0;
 
+    std::vector<std::string> face_ids;
+
     for (auto &face: mapping) {
         cv::Mat one_feature;
+        face_ids.emplace_back(face.first);
         auto face_files = face.second;
         std::cout << "Processing: " << face.first << std::endl;
         int flag = 0;
@@ -258,13 +260,13 @@ void ArcFace::WriteFacebank(const std::map<std::string, std::vector<cv::String>>
         }
     }
 
-    std::cout << idx << std::endl;
-
-    // for (size_t x=0; x<100; ++x) {
-    //     std::cout << facebank[x] << std::endl;
-    // }
-
-    std::ofstream ofp(save_path, std::ios::out | std::ios::binary);
+    std::ofstream ofp(save_facebank_path, std::ios::out | std::ios::binary);
     ofp.write((char*)facebank, mapping.size()*outSize*sizeof(float));
     ofp.close();
+
+    std::ofstream ofsn(save_name_path);    
+    for(int i = 0; i < face_ids.size(); ++i) {
+        ofsn << face_ids[i] << std::endl; // I also tried replacing endl with a "\n"
+    }
+    ofsn.close();
 }

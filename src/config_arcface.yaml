@@ -3,6 +3,7 @@ arcface:
     engine_file:   "../arcface_r100.trt"
     update: true
     facebank_file: "../facebank.bin"
+    names_file: "../names.txt"
     facebank_dir: "/mnt/nfs/chengyong/Workspace/face_recognition/InsightFace_Pytorch_local/data/facebank"
     NUM_FACES: 10
     EMB_NUM: 512

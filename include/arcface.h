@@ -10,14 +10,14 @@ public:
     ~ArcFace();
     void LoadEngine();
     cv::Mat InferenceImage(const cv::Mat &aligned_face);
-    void PrepareFacebank(const std::map<std::string, std::vector<cv::String>> &mapping, std::string save_path);
+    void PrepareFacebank(const std::map<std::string, std::vector<cv::String>> &mapping, std::string save_facebank_path, std::string save_name_path);
     
 
 private:
     cv::Mat EngineInference(const std::vector<cv::Mat> &image_list, const int &outSize, void **buffers,
                          const std::vector<int64_t> &bufferSize, cudaStream_t stream);
     void WriteFacebank(const std::map<std::string, std::vector<cv::String>> &mapping, const int &outSize, void **buffers,
-                         const std::vector<int64_t> &bufferSize, cudaStream_t stream, std::string save_path);
+                         const std::vector<int64_t> &bufferSize, cudaStream_t stream, std::string save_facebank_path, std::string save_name_path);
     std::vector<float> prepareImage(std::vector<cv::Mat> &image);
     void ReshapeandNormalize(float out[], cv::Mat &feature, const int &MAT_SIZE, const int &outSize);
 

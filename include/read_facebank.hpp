@@ -22,6 +22,18 @@ vector<float> read_bin(string file_path) {
     return pts;
 }
 
+vector<std::string> read_name_file(string file_path) {
+    ifstream file;
+    string line;
+    file.open(file_path);
+    vector<string> names;
+    while (getline(file, line)) {
+        names.push_back(line);
+    }
+    file.close();
+    return(names);
+}
+
 cv::Mat read_facebank(string bin_path, int emb_num, int num_faces) {
     vector<float> face_emb = read_bin(bin_path);
     // for (size_t i = 0; i<100; ++i) {
@@ -38,3 +50,4 @@ cv::Mat read_facebank(string bin_path, int emb_num, int num_faces) {
     // }
     return feature.t(); // (facebank_feature * num_faces)
 }
+

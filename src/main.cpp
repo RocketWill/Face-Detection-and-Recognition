@@ -31,18 +31,20 @@ int main (int argc, char *argv[]) {
     YAML::Node root = YAML::LoadFile(arcface_config_file);
     YAML::Node config = root["arcface"];
     std::string facebank_file = config["facebank_file"].as<std::string>();
+    std::string name_file = config["names_file"].as<std::string>();
     bool update = config["update"].as<bool>();
     if (update) {
         std::cout << "preparing face bank..." << std::endl;
         std::string facebank_dir = config["facebank_dir"].as<std::string>();
         auto facebank_mapping = prepare_facebank_raw_data(facebank_dir);
-        ArcFace.PrepareFacebank(facebank_mapping, facebank_file);
+        ArcFace.PrepareFacebank(facebank_mapping, facebank_file, name_file);
     }
     int emb_num = config["EMB_NUM"].as<int>();
     int num_faces = config["NUM_FACES"].as<int>();
     cv::Mat facebank_features = read_facebank(facebank_file, emb_num, num_faces);
     cout << facebank_features.cols << " " << facebank_features.rows << endl; // (10, 512)
 
+    std::vector<std::string> name_ids = read_name_file(name_file);
 
     std::vector<std::vector<RetinaFace::FaceRes>> all_dets = RetinaFace.InferenceImage(image_path);
     cv::Mat img = cv::imread(image_path);
@@ -51,7 +53,21 @@ int main (int argc, char *argv[]) {
         all_dets[0][i].aligned_face = aligned_face;
         cv::Mat face_feature = ArcFace.InferenceImage(aligned_face);
 
-        std::cout << face_feature * facebank_features << std::endl;
+        auto score_matrix = face_feature * facebank_features;
+        std::cout << score_matrix << std::endl;
+
+        double minVal; 
+        double maxVal; 
+        Point minLoc; 
+        Point maxLoc;
+        cv::minMaxLoc(score_matrix, &minVal, &maxVal, &minLoc, &maxLoc);
+
+        if (maxVal < 0.2) {
+            std::cout << "Cannot recognize your face." << std::endl;
+        } else {
+            std::cout << "Guess you are " << name_ids[maxLoc.x] << "!" << std::endl;
+        }
+
         cv::imwrite(std::to_string(i)+"_align.jpg", aligned_face);
     }
 
