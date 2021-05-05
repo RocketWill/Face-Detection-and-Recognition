@@ -1,4 +1,4 @@
-# Face Detection and Recognition
+# TensorRT Face Detection and Recognition
 ## TODO
 - [x] Retinaface 推理 (MNET -> ONNX)
 - [x] ArcFace 推理 (`IR-SE100` MNET -> ONNX)
