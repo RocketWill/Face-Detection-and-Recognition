@@ -1,4 +1,11 @@
 # Face Detection and Recognition
+## TODO
+- [x] Retinaface 推理 (MNET -> ONNX)
+- [x] ArcFace 推理 (`IR-SE100` MNET -> ONNX)
+- [x] ArcFace PyTorch model -> ONNX
+- [ ] 基於 own dataset 训练 PyTorch model
+- [ ] Finetune 預訓練 model
+- [ ] 對比 `Mobilefacenet`、`IR-SE50` 性能
 
 ## 1. Detection
 1. 使用 RetinaFace 檢測人臉框和關鍵點，再經由仿射變換對齊人臉，並 crop 成 `112 * 112`。
