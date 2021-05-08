@@ -39,6 +39,7 @@ std::map<std::string, std::vector<cv::String>> prepare_facebank_raw_data(std::st
     auto mapping = get_person_img_map(subdirs);
     return mapping;
 }
+<<<<<<< HEAD
 
 cv::Mat expand_face_feature(cv::Mat face_feature, int num_faces, int emb_num) {
     cv::Mat res = cv::Mat(num_faces, emb_num, CV_32F);
@@ -47,3 +48,5 @@ cv::Mat expand_face_feature(cv::Mat face_feature, int num_faces, int emb_num) {
     }
     return res;
 }
+=======
+>>>>>>> 921a4c4c424c68f5b4086e2a9fc270f27b68bc02

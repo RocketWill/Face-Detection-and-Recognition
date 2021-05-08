@@ -50,7 +50,6 @@ int main (int argc, char *argv[]) {
 
     cv::Mat img = cv::imread(image_path);
     cv::Mat vis = img.clone();
-
     for (size_t i=0; i<all_dets[0].size(); ++i) {
         cv::Mat aligned_face = RetinaFace.align_face(img, all_dets[0][i].keypoints, 112);
         all_dets[0][i].aligned_face = aligned_face;
@@ -91,5 +90,5 @@ int main (int argc, char *argv[]) {
     }
 
     cv::imwrite("./rec.jpg", vis);
-
+    return 0;
 }

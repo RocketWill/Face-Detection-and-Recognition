@@ -291,8 +291,6 @@ void ArcFace::WriteFacebank(const std::map<std::string, std::vector<cv::String>>
         }
     }
 
-    std::cout << idx << std::endl;
-
     std::ofstream ofp(save_facebank_path, std::ios::out | std::ios::binary);
     ofp.write((char*)facebank, mapping.size()*outSize*sizeof(float));
     ofp.close();
